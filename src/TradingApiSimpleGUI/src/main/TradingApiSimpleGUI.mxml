@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	<mx:Button x="503" y="576" label="Stop All" width="100" height="48" id="StopAllButton" click="handleStopAllButtonClick(event)"/>
+	<mx:TextInput x="129" y="536" id="LightstreamerUrlTextBox" text="pkh-dev1-web06" width="189"/>
+	<mx:TextInput x="357" y="10" id="txtApiUrl" text="http://93.187.19.139/TradingAPI" width="271"/>
+	<mx:Label x="306" y="12" text="API Url"/>
+	<mx:TextInput x="84" y="40" id="PasswordTextBox" text="password"/>
+	<mx:TextInput x="84" y="10" id="UsernameTextBox" text="CC735158"/>
+	<mx:Label x="24" y="538" text="Lightstreamer Url"/>
+	<mx:Label x="24" y="578" text="MarketId"/>
+	<mx:Label x="4" y="12" text="Username"/>
+	<mx:Label x="4" y="42" text="Password"/>
+	<mx:TextInput x="87" y="576" id="marketIdTextBox" text="71442"/>
+	<mx:Button x="255" y="576" label="Subscribe" id="SubscribeToPriceButton" click="handleSubscribeToPriceButtonClick(event)"/>
+
+	<mx:TextInput x="24" y="614" id="PriceHistoryUrlTextBox" text="http://localhost:46849" width="223"/>
+	<mx:Button x="255" y="614" label="Get Price History" id="GetPriceHistoryButton" click="handleGetPriceHistoryButtonClick(event)"/>
+	
+	<mx:TextArea x="21" y="652" width="606" height="324" id="OutputTextBox"/>
+
+	<mx:Script>
+        <![CDATA[
+			import TradingApi.Client.Core.Domain.PriceBar;
+			import TradingApi.Client.Core.Domain.PriceHistoryRequest;
+			import TradingApi.Client.Core.Lightstreamer.LightstreamerConnection;
+			import TradingApi.Client.Core.Lightstreamer.StatusChangedEvent;
+			import TradingApi.Client.Core.MarketFetcher;
+			import TradingApi.Client.Core.PriceHistoryFetcher;
+			import TradingApi.Client.Core.PriceHistoryResponseEvent;
+			import TradingApi.Client.Core.PriceListener;
+			import TradingApi.Client.Core.PriceUpdateEvent;
+			import TradingApi.Client.Core.TradingAPIConnection;
+			import TradingApi.Client.Core.WebClient.*;
+			
+			import flash.events.MouseEvent;
+			
+			import mx.rpc.events.ResultEvent;
+        
+        	private var _connection:LightstreamerConnection;
+        	private var _priceListener:PriceListener;
+			
+			private var _tradingAPIConnection:TradingAPIConnection;
+        	 
+            private function handleSubscribeToPriceButtonClick ( event:MouseEvent ):void
+            {
+               StartConnection();
+               
+               WriteStatus("Subscribing to price: "+marketIdTextBox.text);
+               
+                _priceListener = new PriceListener(Number(marketIdTextBox.text),_connection);
+	            _priceListener.addEventListener(PriceListener.PRICE_UPDATE_EVENT, onPriceUpdate);
+	            _priceListener.Subscribe();
+            }
+            
+			private function onPriceUpdate(event:PriceUpdateEvent):void
+			{
+				WriteUpdate(event.Price.TickDate.toString() + " : " + event.Price.MarketId.toString() + " : " + event.Price.PriceValue.toString());
+			}
+			
+            private function StartConnection():void
+	        {
+	            if (_connection != null) return;
+
+	            _connection = new LightstreamerConnection(LightstreamerUrlTextBox.text, UsernameTextBox.text, PasswordTextBox.text , "80", "80");
+	            _connection.addEventListener(LightstreamerConnection.STATUS_CHANGED_EVENT,
+		             function (evt:StatusChangedEvent):void
+		             {
+		             	 WriteStatus(evt.Status);
+		             });
+	        }
+            
+            private function handleGetPriceHistoryButtonClick ( event:MouseEvent ):void
+            {
+				// TODO : sort out TradingApiConnection
+				/*
+               var fetcher:PriceHistoryFetcher = new PriceHistoryFetcher(
+				   PriceHistoryUrlTextBox.text, 
+				   new TradingAPIConnection(WebClientFactory.Create()));
+               var request:PriceHistoryRequest = new PriceHistoryRequest();
+               request.MarketId = -100;
+               request.Interval = "day";
+               request.Span = 1;
+               request.MaxNumberOfBars = 5;
+
+               WriteStatus("Fetching price history...");
+               
+               fetcher.addEventListener(PriceHistoryFetcher.PRICE_HISTORY_RESPONSE_EVENT,
+	               	function (e:PriceHistoryResponseEvent):void
+			        {
+				       for (var i:String in e.PriceHistoryBars)
+					   {
+						   WriteUpdate(e.PriceHistoryBars[i].toString());
+					   }
+			        });
+               
+	           fetcher.BeginPriceHistoryRequest(request);
+				*/
+	        }
+	        
+	        private function handleStopAllButtonClick ( event:MouseEvent ):void
+            {
+	        	_connection.Close();
+            }
+	        
+            private function WriteUpdate(update:String):void
+	        {
+   	         	WriteOutput("UPDATE: " + update);
+    	    }
+
+	        private function WriteStatus(status:String):void
+    	    {
+        	    WriteOutput("STATUS: " + status);
+        	}
+            
+            private function WriteOutput(message:String):void
+            {
+            	OutputTextBox.text += message + "\n";
+            }
+
+			protected function btnAuth_clickHandler(event:MouseEvent):void
+			{
+				WriteStatus("Beginning Auth...");
+				if (_tradingAPIConnection == null)
+				{
+					_tradingAPIConnection = new TradingAPIConnection(txtApiUrl.text);
+					_tradingAPIConnection.addEventListener(TradingAPIConnection.AUTHENTICATION_SUCCESS, onAuthSuccess);
+					_tradingAPIConnection.addEventListener(TradingAPIConnection.AUTHENTICATION_FAILURE, onAuthFailure);
+					_tradingAPIConnection.Authenticate(UsernameTextBox.text, PasswordTextBox.text);
+				}
+			}
+			
+			private function onAuthSuccess(event:ResultEvent):void
+			{
+				WriteUpdate("Auth success! Session == " + event.result.toString());
+				panelAuthRequired.enabled = true;
+			}
+			
+			private function onAuthFailure(event:ResultEvent):void
+			{
+				WriteUpdate("Auth FAILURE!");
+			}
+
+			private var _marketFetcher:MarketFetcher;
+			private var _priceHistory:PriceHistoryFetcher;
+			
+			protected function btnFetchMarketHistory_clickHandler(event:MouseEvent):void
+			{
+				_priceHistory = new PriceHistoryFetcher(_tradingAPIConnection);
+				_priceHistory.addEventListener(PriceHistoryFetcher.PRICE_HISTORY_RESPONSE_EVENT, onMarkets);
+				
+				var phr:PriceHistoryRequest = new PriceHistoryRequest();
+				phr.MarketId = int(txtMarketId.text);
+				phr.Interval = cmbIntervals.text;
+				phr.Span = int(txtSpan.text);
+				phr.MaxNumberOfBars = int(txtBars.text);
+				
+				_priceHistory.BeginPriceHistoryRequest(phr);
+			}
+			
+			private function onMarkets(event:ResultEvent):void
+			{
+				trace(event);
+			}
+
+
+			protected function btnSearchMarkets_clickHandler(event:MouseEvent):void
+			{	
+				_marketFetcher = new MarketFetcher(_tradingAPIConnection);
+				_marketFetcher.addEventListener(MarketFetcher.MARKET_SEARCH_RESPONSE_EVENT, onSearch);
+				_marketFetcher.beginSearchMarkets(txtMarketSearch.text,"cfd", int(txtNumberOfResults.text));
+			}
+
+			private function onSearch(event:ResultEvent):void
+			{
+				trace(event);
+			}
+			
+        ]]>
+    </mx:Script>
+	<mx:Button x="543" y="41" label="Authenticate" id="btnAuth" click="btnAuth_clickHandler(event)"/>
+	<mx:Panel enabled="false" x="10" y="78" width="618" height="317" layout="absolute" title="Disabled until client authentication..." dropShadowVisible="false" id="panelAuthRequired">
+		<mx:Button x="431" y="60" label="Fetch Price History" width="175" id="btnFetchMarketHistory" click="btnFetchMarketHistory_clickHandler(event)"/>
+		<mx:TextInput x="95" y="23" width="69" id="txtMarketId" text="-100"/>
+		<mx:TextInput x="316" y="24" width="69" id="txtSpan" text="1"/>
+		<mx:Label x="231" y="26" text="Span:" width="73" textAlign="right"/>
+		<mx:Label x="10" y="25" text="Market ID:" width="73" textAlign="right"/>
+		<mx:ComboBox x="95" y="59" editable="true" height="23" id="cmbIntervals" width="102">
+			<mx:dataProvider>
+				<mx:String>MINUTE</mx:String>
+				<mx:String>DAY</mx:String>
+			</mx:dataProvider>
+		</mx:ComboBox>
+		<mx:Label x="10" y="61" text="Interval:" width="73" textAlign="right"/>
+		<mx:TextInput x="316" y="59" width="69" id="txtBars" text="20"/>
+		<mx:Label x="231" y="61" text="# of bars:" width="73" textAlign="right"/>
+		<mx:HRule x="25" y="103" width="559"/>
+		<mx:TextInput x="95" y="127" width="69" id="txtMarketSearch" text="uk"/>
+		<mx:TextInput x="316" y="128" width="69" id="txtNumberOfResults" text="20"/>
+		<mx:Label x="231" y="130" text="# of results:" width="73" textAlign="right"/>
+		<mx:Label x="10" y="129" text="Search:" width="73" textAlign="right"/>
+		<mx:Button x="431" y="129" label="Search Markets" width="175" id="btnSearchMarkets" click="btnSearchMarkets_clickHandler(event)"/>
+	</mx:Panel>
+    
+</mx:Application>

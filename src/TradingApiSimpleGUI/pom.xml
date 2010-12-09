@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>cityindex</groupId>
+    <artifactId>FlexCommon</artifactId>
+    <version>0.51-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>TradingApiSimpleGUI</artifactId>
+  <name>TradingApiSimpleGUI</name>
+  <packaging>swf</packaging>
+
+  
+  <properties>
+    <root.basedir>${project.parent.basedir}</root.basedir>
+  </properties>
+
+  <build>
+    <sourceDirectory>src/main</sourceDirectory>
+    <testSourceDirectory>src/test</testSourceDirectory>
+    <plugins>
+	  <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+		<executions>
+		  <execution>
+			<id>remove-FlexUnitApplication</id>
+			<phase>generate-sources</phase>
+			<goals>
+			  <goal>clean</goal>
+			</goals>
+		  </execution>
+		</executions>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>src/main</directory>
+              <includes>
+                <include>FlexUnitApplication.mxml</include>
+				<include>FlexUnitCompilerApplication.mxml</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+	  
+	  <plugin>
+        <groupId>org.sonatype.flexmojos</groupId>
+        <artifactId>flexmojos-maven-plugin</artifactId>
+        <version>${flexmojos.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+			<moduleFiles>
+                <module>TradingApiSimpleGUI.mxml</module>
+			</moduleFiles>
+          <locales>
+            <locale>en_US</locale>
+          </locales>
+          <targetPlayer>${flashplayer.version.major}.${flashplayer.version.minor}</targetPlayer>
+        </configuration>
+        <dependencies>
+        	<dependency>
+	            <groupId>com.adobe.flex</groupId>
+	            <artifactId>compiler</artifactId>
+	            <version>${flex.version}</version>
+	            <type>pom</type>
+          </dependency>
+        </dependencies>
+      </plugin>
+	  
+	  <plugin>
+        <groupId>org.sonatype.flexmojos</groupId>
+        <artifactId>flexmojos-maven-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wrapper</goal>
+            </goals>
+			<configuration>
+				<outputDirectory>${project.build.directory}/deploy</outputDirectory>
+			</configuration>
+          </execution>
+        </executions>
+      </plugin>
+		<plugin>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<executions>
+				<execution>
+					<phase>install</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+						<tasks>
+							<copy file="${project.build.directory}/${project.artifactId}-${project.version}.swf" tofile="${project.build.directory}/deploy/${project.artifactId}-${project.version}.swf" />
+							<move file="${project.build.directory}/deploy/${project.artifactId}-${project.version}.html" tofile="${project.build.directory}/deploy/index.html" />
+						</tasks>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
+		 
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>cityindex</groupId>
+      <artifactId>TradingApiClient.Core</artifactId>
+      <version>${project.parent.version}</version>
+      <type>swc</type>
+    </dependency>
+	
+    <dependency>
+      <groupId>com.adobe.flex.framework</groupId>
+      <artifactId>flex-framework</artifactId>
+      <version>${flex.version}</version>
+      <type>pom</type>
+      <exclusions> 
+        <!-- make sure to exclude the default 'playerglobal' transitive dependency -->
+        <exclusion> 
+          <groupId>com.adobe.flex.framework</groupId> 
+          <artifactId>playerglobal</artifactId> 
+        </exclusion> 
+      </exclusions>  
+    </dependency>
+    
+    <dependency> 
+      <groupId>com.adobe.flex.framework</groupId> 
+      <artifactId>playerglobal</artifactId> 
+      <version>${flex.version}</version>  <!-- this artifact version must match the flex SDK version used in this project -->
+      <classifier>${flashplayer.version.major}</classifier>  <!-- the classifier specifies the target flash player major version  -->
+      <type>swc</type> 
+    </dependency> 
+
+    <dependency>
+      <groupId>com.adobe.flexunit</groupId>
+      <artifactId>flexunit</artifactId>
+      <version>${flexunit.version}</version>
+      <type>swc</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

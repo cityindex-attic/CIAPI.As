@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cityindex</groupId>
+  <artifactId>FlexCommon</artifactId>
+  <name>FlexCommon</name>
+  <version>0.51-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <modules>
+  	<module>TradingApiClient.Core</module>
+	<module>TradingApiSimpleGUI</module>
+  </modules>
+  
+   <properties>
+    <flex.version>4.1.0.15646</flex.version>
+	<flashplayer.version.major>10.0</flashplayer.version.major>
+	<flashplayer.version.minor>0</flashplayer.version.minor>
+	<flexunit.version>4.0-rc-1</flexunit.version>
+	<flexmojos.version>3.6.1</flexmojos.version>   <!--<flexmojos.version>3.7-SNAPSHOT</flexmojos.version>-->
+	<sonar.language>flex</sonar.language>
+    <sonar.dynamicAnalysis>false</sonar.dynamicAnalysis>
+	<root.basedir>${project.basedir}</root.basedir>
+  </properties>
+
+  <build>
+    <sourceDirectory>.</sourceDirectory>
+	<plugins>
+		  <plugin>
+			<artifactId>maven-release-plugin</artifactId>
+			<configuration>
+			  <tagBase>http://cityindex.unfuddle.com/svn/cityindex_flexcommon/tags</tagBase>
+			  <autoVersionSubmodules>true</autoVersionSubmodules>
+          	  <preparationGoals>clean install</preparationGoals>
+			  <configurationReport>true</configurationReport>
+            </configuration>
+		  </plugin>
+	 </plugins>
+  </build>
+  
+  <dependencies>
+	  <dependency>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0-beta-1</version>
+	  </dependency>
+	</dependencies>
+
+  <!--  specify the flex-mojos repositories (can also be done in settings.xml)-->
+  <repositories>
+    <repository>
+      <id>flex-mojos-repository</id>
+      <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+	  <releases> 
+		<enabled>true</enabled> 
+	  </releases>
+      <snapshots> 
+		<enabled>true</enabled>
+	  </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>flex-mojos-repository</id>
+      <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+	  <releases> 
+		<enabled>true</enabled> 
+	  </releases>
+      <snapshots> 
+		<enabled>true</enabled>
+	  </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+        <id>flexpmd.opensource.adobe</id>
+	    <releases>
+	        <enabled>true</enabled>
+    	    </releases>
+	    <snapshots>
+	        <enabled>false</enabled>
+	    </snapshots>
+	    <name>FlexPMD repository on opensource.adobe.com</name>
+	    <url>http://opensource.adobe.com/svn/opensource/flexpmd/maven-repository/release/</url>	
+    </pluginRepository>
+
+  </pluginRepositories>
+  
+</project>

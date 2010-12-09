@@ -1,0 +1,56 @@
+========Install Maven 2 for api========
+1) Install Maven 2 to C:\Program Files\apache-maven-2.2.1 from http://maven.apache.org/download.html
+2) add C:\Program Files\apache-maven-2.2.1\bin to path
+3) SET M2_HOME = C:\Program Files\apache-maven-2.2.1
+4) Add c:\Users\<your name>\.m2\settings.xml containing <settings></settings>
+5) "mvn --version" should work
+
+========Install Tortoise SVN========
+1) Download from http://tortoisesvn.net/downloads - NB: Make sure you get a 64bit version if you are on Win7 64bit
+
+=======Getting the source========
+1) Checkout from SVN repo at: https://cityindex.unfuddle.com/svn/cityindex_flexcommon
+2) Do command line build - cd <download location>; mvn install
+
+======Install Flash Debug version 10.1 or later======
+1) http://labs.adobe.com/downloads/flashplayer10.html#flashplayer10
+
+===Setup Maven dependencies===
+1) Install the bundled 3rd party dependencies using ./register_3rdparty_libs_with_local_m2repo.cmd
+
+======Setup FlexMonkey =====
+1) Run Tools/FlexMonkey/FlexMonkey4.0_Beta1.1.air
+
+=======Setting up FlashBuilder4=======
+1) We're using FlashBuilder 4 premium (Eclipse plugin version, using the build in Eclipse)
+2) Install Subclipse from http://subclipse.tigris.org/update_1.6.x
+3) Install Maven2 Eclipse plugin from http://m2eclipse.sonatype.org/sites/m2e
+4) Create a new workspace.  Checkout the trunk folder into a folder below the workspace folder 
+  e.g C:\Dev\FlexITPWorkspace                      <--- workspace here
+      C:\Dev\FlexITPWorkspace\cityindex_flexitp  <--- svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
+5) Import > Maven > Existing Maven project - select C:\Dev\FlexChartsWorkspace\cityindex_flexcharts folder
+6) Wait for build process, 
+7) Run FlexUnit tests
+
+====Version & Release===
+1) Install command line SVN - http://subversion.apache.org/packages.html, and ensure svn.exe is in path
+2) Cache credentials - do a svn info https://cityindex.unfuddle.com/svn/cityindex_flexcommon/dev_setup_instructions.txt 
+   when logged in as the user that will be running the build
+ 
+*****Issues*****
+1) Q: Flashbuilder code completion etc breaks.
+   A: Make sure you checkout the project to a new workspace, such that the project is below the workspace directory
+     e.g  C:\Dev\FlexITPWorkspace                    <--- workspace here
+          C:\Dev\FlexITPWorkspace\cityindex_flexitp  <--- svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
+          
+          
+=====Install LighStreamer Library to local repository====
+ There is a library that we need to install to local maven repository 
+Below are the step to install the library.
+
+1)- Change dir to where the master pom file is located
+2)- Run the following from command line:           
+
+mvn install:install-file -DgroupId=com.lightstreamer -DartifactId=lightstreamer.as.client -Dversion=1.0.0 -Dpackaging=swc -Dfile=TradingApiClient.Core/libs/Lightstreamer_as_client.swc
+3)- On successful installation there must be a new folder named com.lightstreamer on the user local repository. 
+for instance <USER_HOME>/.m2/repository/com/lightstreamer

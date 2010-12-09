@@ -1,0 +1,12 @@
+Thumbs.db
+.DS_Store
+.project
+.actionScriptProperties
+.flexProperties
+.flexLibProperties
+.FlexUnitSettings
+.settings
+bin
+bin-debug
+bin-release
+target
