@@ -26,15 +26,19 @@
   <build>
     <sourceDirectory>.</sourceDirectory>
 	<plugins>
-		  <plugin>
-			<artifactId>maven-release-plugin</artifactId>
-			<configuration>
-			  <tagBase>http://cityindex.unfuddle.com/svn/cityindex_flexcommon/tags</tagBase>
-			  <autoVersionSubmodules>true</autoVersionSubmodules>
-          	  <preparationGoals>clean install</preparationGoals>
-			  <configurationReport>true</configurationReport>
-            </configuration>
-		  </plugin>
+		<plugin>
+		  <groupId>org.sonatype.flexmojos</groupId>
+		  <version>3.3.0</version>
+		  <artifactId>flexmojos-maven-plugin</artifactId>
+		  <extensions>true</extensions>
+		  <configuration>
+			<testRunner>
+			  <launcher>
+				<flashplayerCommand>${project.basedir}../tools/flashplayer/win/10.1/FlashPlayer.exe</flashplayerCommand>
+			  </launcher>
+			</testRunner>
+		  </configuration>
+		</plugin>
 	 </plugins>
   </build>
   
