@@ -88,11 +88,16 @@
         	<includeTestFiles>
         		<includeTestFile>*.as</includeTestFile>
         	</includeTestFiles>
-          <locales>
-            <locale>en_US</locale>
-          </locales>
-          <targetPlayer>${flashplayer.version.major}.${flashplayer.version.minor}</targetPlayer>
-        </configuration>
+			<locales>
+				<locale>en_US</locale>
+			</locales>
+			<targetPlayer>${flashplayer.version.major}.${flashplayer.version.minor}</targetPlayer>
+			<testRunner>
+			  <launcher>
+				<flashplayerCommand>${root.basedir}../tools/flashplayer/win/10.1/FlashPlayer.exe</flashplayerCommand>
+			  </launcher>
+			</testRunner>
+		</configuration>
         <dependencies>
         	<dependency>
 	            <groupId>com.adobe.flex</groupId>
