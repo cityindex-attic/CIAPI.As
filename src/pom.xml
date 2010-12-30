@@ -25,17 +25,6 @@
 
   <build>
     <sourceDirectory>.</sourceDirectory>
-	<plugins>
-		  <plugin>
-			<artifactId>maven-release-plugin</artifactId>
-			<configuration>
-			  <tagBase>http://cityindex.unfuddle.com/svn/cityindex_flexcommon/tags</tagBase>
-			  <autoVersionSubmodules>true</autoVersionSubmodules>
-          	  <preparationGoals>clean install</preparationGoals>
-			  <configurationReport>true</configurationReport>
-            </configuration>
-		  </plugin>
-	 </plugins>
   </build>
   
   <dependencies>
