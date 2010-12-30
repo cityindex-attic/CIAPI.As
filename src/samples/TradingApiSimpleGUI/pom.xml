@@ -1,37 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <!--
-
-    Copyright 2008 Marvin Herman Froeder
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>cityindex</groupId>
-    <artifactId>FlexCommon</artifactId>
+    <artifactId>CIAPI.Flex</artifactId>
     <version>0.51-SNAPSHOT</version>
   </parent>
 
-  <artifactId>TradingApiClient.Core</artifactId>
-  <name>TradingApiClient.Core</name>
-  <packaging>swc</packaging>
+  <artifactId>samples.TradingApiSimpleGUI</artifactId>
+  <name>samples.TradingApiSimpleGUI</name>
+  <packaging>swf</packaging>
 
+  
   <properties>
     <root.basedir>${project.parent.basedir}</root.basedir>
   </properties>
-  
+
   <build>
     <sourceDirectory>src/main</sourceDirectory>
     <testSourceDirectory>src/test</testSourceDirectory>
@@ -59,25 +44,6 @@
           </filesets>
         </configuration>
       </plugin>
-
-	<plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <configuration>
-              <tasks>
-                    <replace file="src\main\TradingApi\Client\Core\Version.as" token="@@@" value="${project.version}" />
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
 	  
 	  <plugin>
         <groupId>org.sonatype.flexmojos</groupId>
@@ -85,9 +51,9 @@
         <version>${flexmojos.version}</version>
         <extensions>true</extensions>
         <configuration>
-        	<includeTestFiles>
-        		<includeTestFile>*.as</includeTestFile>
-        	</includeTestFiles>
+			<moduleFiles>
+                <module>TradingApiSimpleGUI.mxml</module>
+			</moduleFiles>
           <locales>
             <locale>en_US</locale>
           </locales>
@@ -102,17 +68,52 @@
           </dependency>
         </dependencies>
       </plugin>
+	  
+	  <plugin>
+        <groupId>org.sonatype.flexmojos</groupId>
+        <artifactId>flexmojos-maven-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wrapper</goal>
+            </goals>
+			<configuration>
+				<outputDirectory>${project.build.directory}/deploy</outputDirectory>
+			</configuration>
+          </execution>
+        </executions>
+      </plugin>
+		<plugin>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<executions>
+				<execution>
+					<phase>install</phase>
+					<goals>
+						<goal>run</goal>
+					</goals>
+					<configuration>
+						<tasks>
+							<copy file="${project.build.directory}/${project.artifactId}-${project.version}.swf" tofile="${project.build.directory}/deploy/${project.artifactId}-${project.version}.swf" />
+							<move file="${project.build.directory}/deploy/${project.artifactId}-${project.version}.html" tofile="${project.build.directory}/deploy/index.html" />
+						</tasks>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
+		 
     </plugins>
   </build>
-      
+
   <dependencies>
-    <dependency> 
-      <groupId>com.lightstreamer</groupId> 
-      <artifactId>lightstreamer.as.client</artifactId> 
-      <version>1.0.0</version>
-      <type>swc</type> 
+    <dependency>
+      <groupId>cityindex</groupId>
+      <artifactId>TradingApiClient.Core</artifactId>
+      <version>${project.parent.version}</version>
+      <type>swc</type>
     </dependency>
-    
+	
     <dependency>
       <groupId>com.adobe.flex.framework</groupId>
       <artifactId>flex-framework</artifactId>
@@ -124,7 +125,7 @@
           <groupId>com.adobe.flex.framework</groupId> 
           <artifactId>playerglobal</artifactId> 
         </exclusion> 
-      </exclusions> 
+      </exclusions>  
     </dependency>
     
     <dependency> 
@@ -133,7 +134,7 @@
       <version>${flex.version}</version>  <!-- this artifact version must match the flex SDK version used in this project -->
       <classifier>${flashplayer.version.major}</classifier>  <!-- the classifier specifies the target flash player major version  -->
       <type>swc</type> 
-    </dependency>
+    </dependency> 
 
     <dependency>
       <groupId>com.adobe.flexunit</groupId>
@@ -142,8 +143,6 @@
       <type>swc</type>
       <scope>test</scope>
     </dependency>
-	
-	
   </dependencies>
 
- </project>
+</project>

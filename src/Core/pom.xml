@@ -4,19 +4,18 @@
 
   <parent>
     <groupId>cityindex</groupId>
-    <artifactId>FlexCommon</artifactId>
+    <artifactId>CIAPI.Flex</artifactId>
     <version>0.51-SNAPSHOT</version>
   </parent>
 
-  <artifactId>TradingApiSimpleGUI</artifactId>
-  <name>TradingApiSimpleGUI</name>
-  <packaging>swf</packaging>
+  <artifactId>Core</artifactId>
+  <name>Core</name>
+  <packaging>swc</packaging>
 
-  
   <properties>
     <root.basedir>${project.parent.basedir}</root.basedir>
   </properties>
-
+  
   <build>
     <sourceDirectory>src/main</sourceDirectory>
     <testSourceDirectory>src/test</testSourceDirectory>
@@ -44,6 +43,25 @@
           </filesets>
         </configuration>
       </plugin>
+
+	<plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+                    <replace file="src\main\TradingApi\Client\Core\Version.as" token="@@@" value="${project.version}" />
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
 	  
 	  <plugin>
         <groupId>org.sonatype.flexmojos</groupId>
@@ -51,9 +69,9 @@
         <version>${flexmojos.version}</version>
         <extensions>true</extensions>
         <configuration>
-			<moduleFiles>
-                <module>TradingApiSimpleGUI.mxml</module>
-			</moduleFiles>
+        	<includeTestFiles>
+        		<includeTestFile>*.as</includeTestFile>
+        	</includeTestFiles>
           <locales>
             <locale>en_US</locale>
           </locales>
@@ -68,52 +86,17 @@
           </dependency>
         </dependencies>
       </plugin>
-	  
-	  <plugin>
-        <groupId>org.sonatype.flexmojos</groupId>
-        <artifactId>flexmojos-maven-plugin</artifactId>
-        <version>3.6.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>wrapper</goal>
-            </goals>
-			<configuration>
-				<outputDirectory>${project.build.directory}/deploy</outputDirectory>
-			</configuration>
-          </execution>
-        </executions>
-      </plugin>
-		<plugin>
-			<artifactId>maven-antrun-plugin</artifactId>
-			<executions>
-				<execution>
-					<phase>install</phase>
-					<goals>
-						<goal>run</goal>
-					</goals>
-					<configuration>
-						<tasks>
-							<copy file="${project.build.directory}/${project.artifactId}-${project.version}.swf" tofile="${project.build.directory}/deploy/${project.artifactId}-${project.version}.swf" />
-							<move file="${project.build.directory}/deploy/${project.artifactId}-${project.version}.html" tofile="${project.build.directory}/deploy/index.html" />
-						</tasks>
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
-
-		 
     </plugins>
   </build>
-
+      
   <dependencies>
-    <dependency>
-      <groupId>cityindex</groupId>
-      <artifactId>TradingApiClient.Core</artifactId>
-      <version>${project.parent.version}</version>
-      <type>swc</type>
+    <dependency> 
+      <groupId>com.lightstreamer</groupId> 
+      <artifactId>lightstreamer.as.client</artifactId> 
+      <version>1.0.0</version>
+      <type>swc</type> 
     </dependency>
-	
+    
     <dependency>
       <groupId>com.adobe.flex.framework</groupId>
       <artifactId>flex-framework</artifactId>
@@ -125,7 +108,7 @@
           <groupId>com.adobe.flex.framework</groupId> 
           <artifactId>playerglobal</artifactId> 
         </exclusion> 
-      </exclusions>  
+      </exclusions> 
     </dependency>
     
     <dependency> 
@@ -134,7 +117,7 @@
       <version>${flex.version}</version>  <!-- this artifact version must match the flex SDK version used in this project -->
       <classifier>${flashplayer.version.major}</classifier>  <!-- the classifier specifies the target flash player major version  -->
       <type>swc</type> 
-    </dependency> 
+    </dependency>
 
     <dependency>
       <groupId>com.adobe.flexunit</groupId>
@@ -143,6 +126,8 @@
       <type>swc</type>
       <scope>test</scope>
     </dependency>
+	
+	
   </dependencies>
 
-</project>
+ </project>

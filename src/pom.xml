@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>cityindex</groupId>
-  <artifactId>FlexCommon</artifactId>
-  <name>FlexCommon</name>
+  <artifactId>CIAPI.Flex</artifactId>
+  <name>CIAPI.Flex</name>
   <version>0.51-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <modules>
-  	<module>TradingApiClient.Core</module>
-	<module>TradingApiSimpleGUI</module>
+  	<module>Core</module>
+	<module>samples/TradingApiSimpleGUI</module>
   </modules>
   
    <properties>
