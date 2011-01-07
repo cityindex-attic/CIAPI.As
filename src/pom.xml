@@ -13,6 +13,7 @@
   </modules>
   
    <properties>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <flex.version>4.1.0.15646</flex.version>
 	<flashplayer.version.major>10.0</flashplayer.version.major>
 	<flashplayer.version.minor>0</flashplayer.version.minor>
