@@ -1,4 +1,4 @@
-=CIAPI.Flex=
+=CIAPI.Flex= [Incomplete] [Not supported]
 Flex client libraries and sample applications for the CityIndex TradingAPI
 
 
