@@ -34,20 +34,28 @@ This project has been retired and is no longer being supported by City Index Ltd
 1. We're using FlashBuilder 4 premium (Eclipse plugin version, using the build in Eclipse)
 1. Install Subclipse from http://subclipse.tigris.org/update_1.6.x
 1. Install Maven2 Eclipse plugin from http://m2eclipse.sonatype.org/sites/m2e
-1. Create a new workspace.  Checkout the trunk folder into a folder below the workspace folder 
-  e.g C:\Dev\FlexITPWorkspace                      <--- workspace here
-      C:\Dev\FlexITPWorkspace\cityindex_flexitp  <--- svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
+1. Create a new workspace. Checkout the trunk folder into a folder below the workspace folder, e.g.
+```
+    # workspace here
+    C:\Dev\FlexITPWorkspace
+    # svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
+    C:\Dev\FlexITPWorkspace\cityindex_flexitp
+```
 1. Import > Maven > Existing Maven project - select C:\Dev\FlexChartsWorkspace\cityindex_flexcharts folder
 1. Wait for build process, 
 1. Run FlexUnit tests
 
 ## Known Issues
 
-1. Q: Flashbuilder code completion etc breaks.
-   A: Make sure you checkout the project to a new workspace, such that the project is below the workspace directory
-     e.g  C:\Dev\FlexITPWorkspace                    <--- workspace here
-          C:\Dev\FlexITPWorkspace\cityindex_flexitp  <--- svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
-          
+1. Q: Flashbuilder code completion etc breaks.    
+A: Make sure you checkout the project to a new workspace, such that the project is below the workspace directory
+```
+    # workspace here
+    C:\Dev\FlexITPWorkspace
+    # svn checkout of http://cityindex.unfuddle.com/svn/cityindex_flexitp/trunk here
+    C:\Dev\FlexITPWorkspace\cityindex_flexitp
+```
+
 ## License
 
 Copyright 2010-2011 City Index Ltd.
